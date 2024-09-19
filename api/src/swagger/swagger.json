@@ -1,0 +1,179 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Operation API",
+    "description": "API для обработки операций с поддержкой синхронного и асинхронного режимов"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/operation/sync": {
+      "post": {
+        "tags": ["Operations"],
+        "summary": "Синхронная операция",
+        "description": "Отправляет операцию и ждет результата.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Операция с id и данными",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "data": {
+                  "type": "string",
+                  "example": "some data"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/operation/async": {
+      "post": {
+        "tags": ["Operations"],
+        "summary": "Асинхронная операция",
+        "description": "Отправляет операцию и сразу возвращает ответ.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Операция с id и данными",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "data": {
+                  "type": "string",
+                  "example": "some data"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status/{id}": {
+      "get": {
+        "tags": ["Operations"],
+        "summary": "Получить статус операции",
+        "description": "Возвращает статус операции по её id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID операции"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clear": {
+      "post": {
+        "tags": ["Queue"],
+        "summary": "Очистка очереди",
+        "description": "Очидает очередь от операций у которых статус не inProcess",
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/terminate": {
+      "post": {
+        "tags": ["Queue"],
+        "summary": ":Очистка очереди",
+        "description": "Очидает очередь от всех операций",
+        "responses": {
+          "200": {
+            "description": "Успешный ответ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

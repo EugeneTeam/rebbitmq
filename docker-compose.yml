@@ -1,0 +1,44 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    environment:
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  api:
+    build: ./api
+    ports:
+      - '3000:3000'
+    environment:
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    depends_on:
+      - rabbitmq
+
+  worker:
+    build: ./worker
+    restart: always
+    ports:
+      - '3001:3000'
+    environment:
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
